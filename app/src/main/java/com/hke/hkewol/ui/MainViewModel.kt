@@ -103,10 +103,13 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             try {
                 _ui.value = _ui.value.copy(sending = true, message = null)
                 val macRaw = MacFormat.parseMac(_ui.value.macInput)
-                NetHelpers.sendWolBroadcast(getApplication(), macRaw)
 
                 val hostKey = _ui.value.hostInput.trim()
-                if (hostKey.isNotEmpty()) repo.upsertHost(hostKey)
+                val currentDisplay = _ui.value.hosts.find { it.hostKey == hostKey }?.display
+
+                // 保留昵称
+                repo.upsertHost(hostKey, currentDisplay)
+
                 val mac = repo.upsertMac(
                     hostKey = hostKey,
                     macText = MacFormat.normalizeText(_ui.value.macInput),
@@ -135,9 +138,12 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                 val hostKey = _ui.value.hostInput.trim()
                 require(hostKey.isNotEmpty()) { "网络唤醒需要填写主机地址" }
                 val macRaw = MacFormat.parseMac(_ui.value.macInput)
-                NetHelpers.sendNetworkWake(hostKey, macRaw)
 
-                repo.upsertHost(hostKey)
+                val currentDisplay = _ui.value.hosts.find { it.hostKey == hostKey }?.display
+
+                // 保留昵称
+                repo.upsertHost(hostKey, currentDisplay)
+
                 val mac = repo.upsertMac(
                     hostKey = hostKey,
                     macText = MacFormat.normalizeText(_ui.value.macInput),
@@ -158,4 +164,5 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             }
         }
     }
+
 }

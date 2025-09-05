@@ -9,12 +9,24 @@ class Repository private constructor(context: Context) {
     private val dao = db.dao()
 
     suspend fun getHosts() = dao.getHosts()
-    suspend fun upsertHost(hostKey: String) = dao.upsertHost(
-        HostEntity(
-            hostKey = hostKey,
-            display = if (hostKey.isEmpty()) "本地" else hostKey
+    // Repository.kt
+    suspend fun upsertHost(hostKey: String, display: String? = null) {
+        val existing = dao.getHosts().find { it.hostKey == hostKey }
+        val finalDisplay = when {
+            !display.isNullOrBlank() -> display
+            existing?.display?.isNotBlank() == true -> existing.display
+            hostKey.isEmpty() -> "本地"
+            else -> hostKey
+        }
+        dao.upsertHost(
+            HostEntity(
+                hostKey = hostKey,
+                display = finalDisplay
+            )
         )
-    )
+    }
+
+
     suspend fun deleteHost(hostKey: String) {
         dao.deleteMacsByHost(hostKey)
         dao.deleteHost(hostKey)

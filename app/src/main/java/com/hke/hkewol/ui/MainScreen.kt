@@ -211,7 +211,7 @@ fun HostSection(
             singleLine = true,
             trailingIcon = {
                 IconButton(onClick = onEditClick) {
-                    Icon(Icons.Default.Edit, contentDescription = "编辑主机")
+                    Icon(Icons.Default.Edit, contentDescription = "编辑主机昵称")
                 }
             },
             modifier = Modifier.fillMaxWidth()
