@@ -21,3 +21,4 @@ obj/
 *.keystore
 .DS_Store
 Thumbs.db
+app/release
