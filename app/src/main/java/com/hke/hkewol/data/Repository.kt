@@ -12,6 +12,10 @@ class Repository private constructor(context: Context) {
     // Repository.kt
     suspend fun upsertHost(hostKey: String, display: String? = null) {
         val existing = dao.getHosts().find { it.hostKey == hostKey }
+        // 如果是第一次保存非空 hostKey，并且存在本地临时主机，则迁移数据
+        if (hostKey.isNotBlank()) {
+            migrateLocalToRealHost(hostKey)
+        }
         val finalDisplay = when {
             !display.isNullOrBlank() -> display
             existing?.display?.isNotBlank() == true -> existing.display
@@ -25,6 +29,23 @@ class Repository private constructor(context: Context) {
             )
         )
     }
+
+    /**
+     * 将本地临时主机("")下的 MAC 记录迁移到新的 hostKey，并删除本地主机
+     */
+    private suspend fun migrateLocalToRealHost(newHostKey: String) {
+        val localHostKey = "" // 你定义的本地主机 key
+        val localMacs = dao.getMacsByHost(localHostKey)
+        if (localMacs.isNotEmpty()) {
+            // 更新 MAC 记录的 hostKey
+            localMacs.forEach { mac ->
+                dao.updateMac(mac.copy(hostKey = newHostKey))
+            }
+            // 删除本地主机记录
+            dao.deleteHost(localHostKey)
+        }
+    }
+
 
 
     suspend fun deleteHost(hostKey: String) {
