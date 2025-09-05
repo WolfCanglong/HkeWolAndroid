@@ -45,7 +45,8 @@ fun MainScreen(
 
     Column(
         Modifier
-            .padding(16.dp)
+            .statusBarsPadding() // 顶部避开状态栏
+            .padding(horizontal = 16.dp)
             .fillMaxSize()
     ) {
         HostSection(

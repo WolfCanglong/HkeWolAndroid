@@ -16,6 +16,7 @@
         android:label="@string/app_name">
         <activity
             android:name=".MainActivity"
+            android:theme="@style/Theme.HkeWol"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
