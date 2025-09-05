@@ -118,6 +118,8 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                 )
                 repo.setLastSuccess(hostKey, mac.id)
 
+                NetHelpers.sendWolBroadcast(getApplication(), macRaw)
+
                 _ui.value = _ui.value.copy(
                     message = "本地唤醒已发送",
                     macs = repo.getMacs(hostKey),
@@ -151,6 +153,8 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
                     nickname = _ui.value.nameInput.ifEmpty { null }
                 )
                 repo.setLastSuccess(hostKey, mac.id)
+
+                NetHelpers.sendNetworkWake(hostKey, macRaw)
 
                 _ui.value = _ui.value.copy(
                     message = "网络唤醒已发送",
