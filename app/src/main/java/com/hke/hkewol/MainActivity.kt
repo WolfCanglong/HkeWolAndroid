@@ -4,12 +4,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import com.hke.hkewol.ui.MainScreen
 import com.hke.hkewol.ui.MainViewModel
+import com.hke.hkewol.ui.theme.HkeWolTheme
 
 class MainActivity : ComponentActivity() {
 
@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            MaterialTheme {
+            HkeWolTheme {
                 Surface {
                     val state by vm.ui.collectAsState()
                     MainScreen(
